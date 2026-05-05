@@ -8,6 +8,12 @@ if (options.ShowHelp)
     return;
 }
 
+if (options.Version)
+{
+    Console.WriteLine("Spicy Little Paper Shitter v0.1.0");
+    return;
+}
+
 if (options.ListBrands)
 {
     BrandRenderer.Render();
@@ -72,6 +78,7 @@ public sealed class CliOptions
     public string? Brand { get; private set; }
     public string? CoworkerName { get; private set; }
     public bool Zammad { get; private set; }
+    public bool Version { get; private set; }
 
     public static CliOptions Parse(string[] args)
     {
@@ -126,6 +133,11 @@ public sealed class CliOptions
 
                 case "--zammad":
                     options.Zammad = true;
+                    break;
+
+                case "--version":
+                case "-v":
+                    options.Version = true;
                     break;
 
                 case "--help":
@@ -967,6 +979,7 @@ public static class HelpRenderer
         Console.WriteLine("  dotnet run -- --list-brands");
         Console.WriteLine("  dotnet run -- --coworker sarah");
         Console.WriteLine("  dotnet run -- --zammad");
+        Console.WriteLine("  dotnet run -- --version");
         Console.WriteLine();
         Console.WriteLine("Options:");
         Console.WriteLine("  --rage <1-10>  Sets printer hostility level. Default: 5");
@@ -978,6 +991,7 @@ public static class HelpRenderer
         Console.WriteLine("  --list-brands  Shows available printer brands");
         Console.WriteLine("  --coworker [name] Runs the cursed works-on-their-machine test");
         Console.WriteLine("  --zammad       Outputs a fake Zammad-style support ticket");
+        Console.WriteLine("  --version, -v  Shows version");
         Console.WriteLine("  --help, -h     Shows help");
         Console.WriteLine();
     }
