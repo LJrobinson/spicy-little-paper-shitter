@@ -12,3 +12,4 @@ G:\SpicyLittlePaperShitter\SpicyLittlePaperShitter\obj\Debug\net10.0\refint\Spic
 G:\SpicyLittlePaperShitter\SpicyLittlePaperShitter\obj\Debug\net10.0\SpicyLittlePaperShitter.pdb
 G:\SpicyLittlePaperShitter\SpicyLittlePaperShitter\obj\Debug\net10.0\SpicyLittlePaperShitter.genruntimeconfig.cache
 G:\SpicyLittlePaperShitter\SpicyLittlePaperShitter\obj\Debug\net10.0\ref\SpicyLittlePaperShitter.dll
+G:\SpicyLittlePaperShitter\SpicyLittlePaperShitter\obj\Debug\net10.0\SpicyLittlePaperShitter.sourcelink.json

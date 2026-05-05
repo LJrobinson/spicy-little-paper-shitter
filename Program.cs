@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 
 var options = CliOptions.Parse(args);
-var diagnostic = PrinterChaosEngine.Generate(options.RageLevel);
+var diagnostic = PrinterChaosEngine.Generate(options.RageLevel, options.Brand);
 
 if (options.ShowHelp)
 {
@@ -47,6 +47,7 @@ public sealed class CliOptions
     public bool Receipt { get; private set; }
     public bool Fix { get; private set; }
     public bool ShowHelp { get; private set; }
+    public string? Brand { get; private set; }
 
     public static CliOptions Parse(string[] args)
     {
@@ -56,6 +57,17 @@ public sealed class CliOptions
         {
             switch (args[i])
             {
+                case "--brand":
+                    if (i + 1 >= args.Length)
+                    {
+                        Console.WriteLine("Missing --brand value. Using random printer.");
+                        break;
+                    }
+
+                    options.Brand = args[i + 1].Trim().ToLowerInvariant();
+                    i++;
+                    break;
+
                 case "--json":
                     options.Json = true;
                     break;
@@ -93,6 +105,16 @@ public sealed class CliOptions
         return options;
     }
 }
+
+public sealed record PrinterProfile(
+    string Brand,
+    string DisplayName,
+    string[] Moods,
+    string[] PaperStatuses,
+    string[] ConnectionStatuses,
+    string[] DriverStatuses,
+    FailureMode[] FailureModes
+);
 
 public sealed record PrinterDiagnostic(
     string TicketId,
@@ -224,22 +246,231 @@ public static class PrinterChaosEngine
         )
     ];
 
-    public static PrinterDiagnostic Generate(int rageLevel)
+    public static PrinterDiagnostic Generate(int rageLevel, string? brand)
     {
-        var failure = Pick(FailureModes);
+        var profile = GetProfile(brand);
+        var failure = Pick(profile.FailureModes);
         var chaosRating = Math.Clamp(rageLevel + Random.Next(-2, 4), 1, 10);
 
         return new PrinterDiagnostic(
             TicketId: $"SLPS-{Random.Next(100, 999)}",
-            PrinterName: Pick(PrinterNames),
-            Mood: Pick(Moods),
-            PaperStatus: Pick(PaperStatuses),
-            ConnectionStatus: Pick(ConnectionStatuses),
-            DriverStatus: Pick(DriverStatuses),
+            PrinterName: profile.DisplayName,
+            Mood: Pick(profile.Moods),
+            PaperStatus: Pick(profile.PaperStatuses),
+            ConnectionStatus: Pick(profile.ConnectionStatuses),
+            DriverStatus: Pick(profile.DriverStatuses),
             Diagnosis: failure.Diagnosis,
             RecommendedFix: failure.RecommendedFix,
             ChaosRating: chaosRating
         );
+    }
+
+    private static PrinterProfile GetProfile(string? brand)
+    {
+        return brand switch
+        {
+            "epson" => new PrinterProfile(
+                Brand: "epson",
+                DisplayName: "Epson TM-T88V",
+                Moods:
+                [
+                    "old reliable until it smells fear",
+                    "COM-port-curious",
+                    "cash drawer adjacent",
+                    "quietly resentful"
+                ],
+                PaperStatuses:
+                [
+                    "loaded, allegedly",
+                    "roll installed by someone in a hurry",
+                    "paper door closed-ish",
+                    "fine until lunch rush"
+                ],
+                ConnectionStatuses:
+                [
+                    "USB, supposedly",
+                    "COM port chose a new identity",
+                    "serial cable doing improv",
+                    "connected through pure superstition"
+                ],
+                DriverStatuses:
+                [
+                    "installed by a maniac in 2017",
+                    "vendor utility required, naturally",
+                    "checkbox-dependent",
+                    "working after exactly three reboots"
+                ],
+                FailureModes:
+                [
+                    new(
+                        "EPSON_COM_PORT_GOBLIN",
+                        "Epson has reclassified itself as a different COM port for personal growth.",
+                        "Try COM3, COM4, COM7, then pretend you meant to do that.",
+                        "Device identity shifted after reboot. Again."
+                    ),
+                    new(
+                        "EPSON_CASH_DRAWER_BEEF",
+                        "Printer works, but the cash drawer is now involved emotionally.",
+                        "Check the drawer kick settings and question why this is printer-adjacent.",
+                        "Cash drawer dependency chain has entered comedy territory."
+                    )
+                ]
+            ),
+
+            "star" => new PrinterProfile(
+                Brand: "star",
+                DisplayName: "Star Micronics TSP100",
+                Moods:
+                [
+                    "utility-software haunted",
+                    "passive aggressive",
+                    "driver dramatic",
+                    "firmware theatrical"
+                ],
+                PaperStatuses:
+                [
+                    "loaded but offended",
+                    "full roll, zero cooperation",
+                    "paper present in theory",
+                    "thermal roll seated with vibes only"
+                ],
+                ConnectionStatuses:
+                [
+                    "network printer in witness protection",
+                    "USB handshake went to lunch",
+                    "connected to the wrong version of reality",
+                    "IP address last seen fleeing the scene"
+                ],
+                DriverStatuses:
+                [
+                    "TSP100 utility has opinions",
+                    "driver exists, confidence does not",
+                    "Windows says fine, which is adorable",
+                    "installed twice, somehow less functional"
+                ],
+                FailureModes:
+                [
+                    new(
+                        "STAR_UTILITY_POSSESSION",
+                        "Star utility opened successfully and somehow made the situation worse.",
+                        "Close the utility, reopen it as administrator, and offer tribute.",
+                        "Vendor utility changed one setting nobody requested."
+                    ),
+                    new(
+                        "STAR_NETWORK_GHOST",
+                        "Printer is visible on the network but refuses to be known.",
+                        "Reassign the IP address and whisper the subnet mask correctly.",
+                        "Network discovery succeeded. Printing did not."
+                    )
+                ]
+            ),
+
+            "zebra" => new PrinterProfile(
+                Brand: "zebra",
+                DisplayName: "Zebra ZD420",
+                Moods:
+                [
+                    "label-printer elite",
+                    "calibration obsessed",
+                    "professionally difficult",
+                    "tiny industrial diva"
+                ],
+                PaperStatuses:
+                [
+                    "labels loaded backwards, probably",
+                    "gap sensor emotionally confused",
+                    "calibration required because joy is illegal",
+                    "media present but spiritually misaligned"
+                ],
+                ConnectionStatuses:
+                [
+                    "USB pretending to be enterprise infrastructure",
+                    "networked like a tiny mainframe",
+                    "connected but demanding calibration",
+                    "driver stack wearing a hard hat"
+                ],
+                DriverStatuses:
+                [
+                    "ZDesigner driver selected violence",
+                    "calibration wizard required",
+                    "darkness setting became a lifestyle",
+                    "driver installed, label size wrong forever"
+                ],
+                FailureModes:
+                [
+                    new(
+                        "ZEBRA_CALIBRATION_RITUAL",
+                        "Zebra refuses to print until the label gap sensor is emotionally validated.",
+                        "Run calibration and pretend the blinking light pattern is documentation.",
+                        "Media calibration required before basic cooperation resumes."
+                    ),
+                    new(
+                        "ZEBRA_LABEL_SIZE_CURSE",
+                        "Label size is wrong in exactly three different places.",
+                        "Fix it in Windows, the app, and the driver because one setting would be too kind.",
+                        "Conflicting label dimensions detected across reality layers."
+                    )
+                ]
+            ),
+
+            "generic" => new PrinterProfile(
+                Brand: "generic",
+                DisplayName: "Generic Thermal Printer #4",
+                Moods:
+                [
+                    "driverless and proud",
+                    "suspiciously cheap",
+                    "haunted by AliExpress",
+                    "legally a printer"
+                ],
+                PaperStatuses:
+                [
+                    "loaded with bargain-bin confidence",
+                    "paper detected by vibes",
+                    "roll present, dignity absent",
+                    "thermal paper of unknown origin"
+                ],
+                ConnectionStatuses:
+                [
+                    "USB device recognized as emotional damage",
+                    "unknown device, obviously",
+                    "COM port generated by roulette wheel",
+                    "connected through a cable from a drawer"
+                ],
+                DriverStatuses:
+                [
+                    "downloaded from a website with six popups",
+                    "signed by absolutely nobody",
+                    "works only after disabling hope",
+                    "generic driver doing community service"
+                ],
+                FailureModes:
+                [
+                    new(
+                        "GENERIC_DRIVER_DUMPSTER",
+                        "Generic driver installed successfully, which is the first red flag.",
+                        "Try a different generic driver and prepare for lateral disappointment.",
+                        "Driver compatibility achieved only in a technical sense."
+                    ),
+                    new(
+                        "GENERIC_UNKNOWN_DEVICE",
+                        "Windows recognizes this printer as 'USB Printing Support' and nothing else.",
+                        "Install the mystery driver and hope it was not bundled with a toolbar.",
+                        "Device identity unavailable. Morale also unavailable."
+                    )
+                ]
+            ),
+
+            _ => new PrinterProfile(
+                Brand: "random",
+                DisplayName: Pick(PrinterNames),
+                Moods: Moods,
+                PaperStatuses: PaperStatuses,
+                ConnectionStatuses: ConnectionStatuses,
+                DriverStatuses: DriverStatuses,
+                FailureModes: FailureModes
+            )
+        };
     }
 
     private static T Pick<T>(IReadOnlyList<T> values)
@@ -501,14 +732,16 @@ public static class HelpRenderer
         Console.WriteLine("  dotnet run -- --receipt");
         Console.WriteLine("  dotnet run -- --fix");
         Console.WriteLine("  dotnet run -- --json");
+        Console.WriteLine("  dotnet run -- --brand epson --ticket");
         Console.WriteLine();
         Console.WriteLine("Options:");
-        Console.WriteLine("  --rage <1-10>   Sets printer hostility level. Default: 5");
-        Console.WriteLine("  --ticket        Outputs a fake support ticket");
-        Console.WriteLine("  --receipt       Outputs a fake thermal receipt");
-        Console.WriteLine("  --fix           Attempts a fake repair");
-        Console.WriteLine("  --json          Outputs diagnostic as JSON");
-        Console.WriteLine("  --help, -h      Shows help");
+        Console.WriteLine("  --rage <1-10>  Sets printer hostility level. Default: 5");
+        Console.WriteLine("  --ticket       Outputs a fake support ticket");
+        Console.WriteLine("  --receipt      Outputs a fake thermal receipt");
+        Console.WriteLine("  --fix          Attempts a fake repair");
+        Console.WriteLine("  --json         Outputs diagnostic as JSON");
+        Console.WriteLine("  --brand <name> Chooses printer brand: epson, star, zebra, generic");
+        Console.WriteLine("  --help, -h     Shows help");
         Console.WriteLine();
     }
 }
