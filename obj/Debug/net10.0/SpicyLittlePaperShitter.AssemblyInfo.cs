@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SpicyLittlePaperShitter")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a8f2300739a066eea72b36e5d3f9b216b0fdbdaa")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1fc250d9844dcf7096540f36be8a9bae1241e4dd")]
 [assembly: System.Reflection.AssemblyProductAttribute("SpicyLittlePaperShitter")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SpicyLittlePaperShitter")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

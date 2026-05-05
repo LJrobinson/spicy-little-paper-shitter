@@ -90,7 +90,6 @@ public sealed class CliOptions
     public static CliOptions Parse(string[] args)
     {
         var options = new CliOptions();
-        
 
         for (var i = 0; i < args.Length; i++)
         {
@@ -165,6 +164,10 @@ public sealed class CliOptions
 
                     options.RageLevel = Math.Clamp(rage, 1, 10);
                     i++;
+                    break;
+
+                default:
+                    Console.WriteLine($"Unknown option ignored: {args[i]}");
                     break;
             }
         }
@@ -1017,18 +1020,18 @@ public static class HelpRenderer
         Console.WriteLine("  dotnet run -- --about");
         Console.WriteLine();
         Console.WriteLine("Options:");
-        Console.WriteLine("  --rage <1-10>  Sets printer hostility level. Default: 5");
-        Console.WriteLine("  --ticket       Outputs a fake support ticket");
-        Console.WriteLine("  --receipt      Outputs a fake thermal receipt");
-        Console.WriteLine("  --fix          Attempts a fake repair");
-        Console.WriteLine("  --json         Outputs diagnostic as JSON");
-        Console.WriteLine("  --brand <name> Chooses printer brand: epson, star, zebra, generic");
-        Console.WriteLine("  --list-brands  Shows available printer brands");
+        Console.WriteLine("  --rage <1-10>     Sets printer hostility level. Default: 5");
+        Console.WriteLine("  --ticket          Outputs a fake support ticket");
+        Console.WriteLine("  --receipt         Outputs a fake thermal receipt");
+        Console.WriteLine("  --fix             Attempts a fake repair");
+        Console.WriteLine("  --json            Outputs diagnostic as JSON");
+        Console.WriteLine("  --brand <name>    Chooses printer brand: epson, star, zebra, generic");
+        Console.WriteLine("  --list-brands     Shows available printer brands");
         Console.WriteLine("  --coworker [name] Runs the cursed works-on-their-machine test");
-        Console.WriteLine("  --zammad       Outputs a fake Zammad-style support ticket");
-        Console.WriteLine("  --version, -v  Shows version");
-        Console.WriteLine("  --about        Shows project lore");
-        Console.WriteLine("  --help, -h     Shows help");
+        Console.WriteLine("  --zammad          Outputs a fake Zammad-style support ticket");
+        Console.WriteLine("  --version, -v     Shows version");
+        Console.WriteLine("  --about           Shows project lore");
+        Console.WriteLine("  --help, -h        Shows help");
         Console.WriteLine();
     }
 }
