@@ -1,13 +1,20 @@
 ﻿using System.Text.Json;
 
 var options = CliOptions.Parse(args);
-var diagnostic = PrinterChaosEngine.Generate(options.RageLevel, options.Brand);
 
 if (options.ShowHelp)
 {
     HelpRenderer.Render();
     return;
 }
+
+if (options.ListBrands)
+{
+    BrandRenderer.Render();
+    return;
+}
+
+var diagnostic = PrinterChaosEngine.Generate(options.RageLevel, options.Brand);
 
 if (options.Json)
 {
@@ -47,6 +54,7 @@ public sealed class CliOptions
     public bool Receipt { get; private set; }
     public bool Fix { get; private set; }
     public bool ShowHelp { get; private set; }
+    public bool ListBrands { get; private set; }
     public string? Brand { get; private set; }
 
     public static CliOptions Parse(string[] args)
@@ -66,6 +74,10 @@ public sealed class CliOptions
 
                     options.Brand = args[i + 1].Trim().ToLowerInvariant();
                     i++;
+                    break;
+
+                case "--list-brands":
+                    options.ListBrands = true;
                     break;
 
                 case "--json":
@@ -265,8 +277,22 @@ public static class PrinterChaosEngine
         );
     }
 
+    public static bool IsKnownBrand(string? brand)
+    {
+        return brand is null ||
+            brand is "epson" or "star" or "zebra" or "generic";
+    }
+
     private static PrinterProfile GetProfile(string? brand)
     {
+        if (!IsKnownBrand(brand))
+        {
+            Console.WriteLine();
+            Console.WriteLine($"Unknown brand: {brand}");
+            Console.WriteLine("Using random printer instead.");
+            Console.WriteLine();
+        }
+
         return brand switch
         {
             "epson" => new PrinterProfile(
@@ -511,6 +537,37 @@ public static class DiagnosticRenderer
     }
 }
 
+public static class BrandRenderer
+{
+    public static void Render()
+    {
+        Console.WriteLine();
+        Console.WriteLine("Available Printer Brands");
+        Console.WriteLine("========================");
+        Console.WriteLine();
+
+        Console.WriteLine("epson");
+        Console.WriteLine("  Old reliable until it smells fear.");
+        Console.WriteLine("  Known crimes: COM port goblins, cash drawer beef.");
+        Console.WriteLine();
+
+        Console.WriteLine("star");
+        Console.WriteLine("  Utility software haunted by retail trauma.");
+        Console.WriteLine("  Known crimes: network ghosts, driver drama.");
+        Console.WriteLine();
+
+        Console.WriteLine("zebra");
+        Console.WriteLine("  Tiny industrial diva with calibration demands.");
+        Console.WriteLine("  Known crimes: label size curses, sensor rituals.");
+        Console.WriteLine();
+
+        Console.WriteLine("generic");
+        Console.WriteLine("  Legally a printer. Emotionally a lawsuit.");
+        Console.WriteLine("  Known crimes: mystery drivers, USB identity crisis.");
+        Console.WriteLine();
+    }
+}
+
 public static class TicketRenderer
 {
     public static void Render(PrinterDiagnostic diagnostic)
@@ -733,6 +790,7 @@ public static class HelpRenderer
         Console.WriteLine("  dotnet run -- --fix");
         Console.WriteLine("  dotnet run -- --json");
         Console.WriteLine("  dotnet run -- --brand epson --ticket");
+        Console.WriteLine("  dotnet run -- --list-brands");
         Console.WriteLine();
         Console.WriteLine("Options:");
         Console.WriteLine("  --rage <1-10>  Sets printer hostility level. Default: 5");
@@ -741,6 +799,7 @@ public static class HelpRenderer
         Console.WriteLine("  --fix          Attempts a fake repair");
         Console.WriteLine("  --json         Outputs diagnostic as JSON");
         Console.WriteLine("  --brand <name> Chooses printer brand: epson, star, zebra, generic");
+        Console.WriteLine("  --list-brands  Shows available printer brands");
         Console.WriteLine("  --help, -h     Shows help");
         Console.WriteLine();
     }
