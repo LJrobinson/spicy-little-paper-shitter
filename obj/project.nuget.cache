@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "vA/tA0Ah1kc=",
+  "success": true,
+  "projectFilePath": "G:\\SpicyLittlePaperShitter\\SpicyLittlePaperShitter\\SpicyLittlePaperShitter.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\WASH3D\\.nuget\\packages\\microsoft.netcore.app.ref\\10.0.6\\microsoft.netcore.app.ref.10.0.6.nupkg.sha512",
+    "C:\\Users\\WASH3D\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\10.0.6\\microsoft.windowsdesktop.app.ref.10.0.6.nupkg.sha512",
+    "C:\\Users\\WASH3D\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\10.0.6\\microsoft.aspnetcore.app.ref.10.0.6.nupkg.sha512",
+    "C:\\Users\\WASH3D\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\10.0.6\\microsoft.netcore.app.host.win-x64.10.0.6.nupkg.sha512"
+  ],
+  "logs": []
+}

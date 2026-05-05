@@ -1,0 +1,14 @@
+G:\SpicyLittlePaperShitter\SpicyLittlePaperShitter\bin\Debug\net10.0\SpicyLittlePaperShitter.exe
+G:\SpicyLittlePaperShitter\SpicyLittlePaperShitter\bin\Debug\net10.0\SpicyLittlePaperShitter.deps.json
+G:\SpicyLittlePaperShitter\SpicyLittlePaperShitter\bin\Debug\net10.0\SpicyLittlePaperShitter.runtimeconfig.json
+G:\SpicyLittlePaperShitter\SpicyLittlePaperShitter\bin\Debug\net10.0\SpicyLittlePaperShitter.dll
+G:\SpicyLittlePaperShitter\SpicyLittlePaperShitter\bin\Debug\net10.0\SpicyLittlePaperShitter.pdb
+G:\SpicyLittlePaperShitter\SpicyLittlePaperShitter\obj\Debug\net10.0\SpicyLittlePaperShitter.GeneratedMSBuildEditorConfig.editorconfig
+G:\SpicyLittlePaperShitter\SpicyLittlePaperShitter\obj\Debug\net10.0\SpicyLittlePaperShitter.AssemblyInfoInputs.cache
+G:\SpicyLittlePaperShitter\SpicyLittlePaperShitter\obj\Debug\net10.0\SpicyLittlePaperShitter.AssemblyInfo.cs
+G:\SpicyLittlePaperShitter\SpicyLittlePaperShitter\obj\Debug\net10.0\SpicyLittlePaperShitter.csproj.CoreCompileInputs.cache
+G:\SpicyLittlePaperShitter\SpicyLittlePaperShitter\obj\Debug\net10.0\SpicyLittlePaperShitter.dll
+G:\SpicyLittlePaperShitter\SpicyLittlePaperShitter\obj\Debug\net10.0\refint\SpicyLittlePaperShitter.dll
+G:\SpicyLittlePaperShitter\SpicyLittlePaperShitter\obj\Debug\net10.0\SpicyLittlePaperShitter.pdb
+G:\SpicyLittlePaperShitter\SpicyLittlePaperShitter\obj\Debug\net10.0\SpicyLittlePaperShitter.genruntimeconfig.cache
+G:\SpicyLittlePaperShitter\SpicyLittlePaperShitter\obj\Debug\net10.0\ref\SpicyLittlePaperShitter.dll
