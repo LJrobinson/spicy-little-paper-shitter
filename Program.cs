@@ -22,6 +22,13 @@ if (options.Json)
     return;
 }
 
+if (options.CoworkerName is not null)
+{
+    CoworkerRenderer.Render(diagnostic, options.CoworkerName);
+    AchievementRenderer.TryRender(diagnostic);
+    return;
+}
+
 if (options.Ticket)
 {
     TicketRenderer.Render(diagnostic);
@@ -56,10 +63,12 @@ public sealed class CliOptions
     public bool ShowHelp { get; private set; }
     public bool ListBrands { get; private set; }
     public string? Brand { get; private set; }
+    public string? CoworkerName { get; private set; }
 
     public static CliOptions Parse(string[] args)
     {
         var options = new CliOptions();
+        
 
         for (var i = 0; i < args.Length; i++)
         {
@@ -74,6 +83,17 @@ public sealed class CliOptions
 
                     options.Brand = args[i + 1].Trim().ToLowerInvariant();
                     i++;
+                    break;
+                
+                case "--coworker":
+                    options.CoworkerName = "someone else's";
+                    
+                    if (i + 1 < args.Length && !args[i + 1].StartsWith("--"))
+                    {
+                        options.CoworkerName = args[i + 1].Trim();
+                        i++;
+                    }
+
                     break;
 
                 case "--list-brands":
@@ -775,6 +795,69 @@ public static class JsonRenderer
     }
 }
 
+public static class CoworkerRenderer
+{
+    private static readonly Random Random = new();
+
+    private static readonly string[] Conclusions =
+    [
+        "This is now somehow your fault.",
+        "The printer has chosen favorites.",
+        "The issue cannot be reproduced because comedy is cruel.",
+        "Your workstation has failed the vibe check.",
+        "The printer respects them more than you.",
+        "Escalation denied. Printer has plausible deniability."
+    ];
+
+    private static readonly string[] SuggestedNextSteps =
+    [
+        "Swap computers and deny everything.",
+        "Ask what checkbox they have that you apparently do not.",
+        "Reinstall the driver while maintaining aggressive eye contact.",
+        "Move their printer profile to your machine and hope it brings the blessing.",
+        "Blame Windows updates. This is legally safe.",
+        "Open Device Manager and pretend this is a science."
+    ];
+
+    public static void Render(PrinterDiagnostic diagnostic, string coworkerName)
+    {
+        var displayName = NormalizeName(coworkerName);
+
+        Console.WriteLine();
+        Console.WriteLine("Coworker Test");
+        Console.WriteLine("=============");
+        Console.WriteLine();
+
+        Console.WriteLine($"Printer : {diagnostic.PrinterName}");
+        Console.WriteLine($"Tested on: {displayName} machine");
+        Console.WriteLine("Result   : ✅ Works perfectly");
+        Console.WriteLine();
+
+        Console.WriteLine("Original issue:");
+        Console.WriteLine(diagnostic.Diagnosis);
+        Console.WriteLine();
+
+        Console.WriteLine("Conclusion:");
+        Console.WriteLine(Conclusions[Random.Next(Conclusions.Length)]);
+        Console.WriteLine();
+
+        Console.WriteLine("Suggested next step:");
+        Console.WriteLine(SuggestedNextSteps[Random.Next(SuggestedNextSteps.Length)]);
+        Console.WriteLine();
+    }
+
+    private static string NormalizeName(string coworkerName)
+    {
+        if (coworkerName.Equals("someone else's", StringComparison.OrdinalIgnoreCase))
+            return "someone else's";
+
+        if (coworkerName.EndsWith("'s", StringComparison.OrdinalIgnoreCase))
+            return coworkerName;
+
+        return $"{coworkerName}'s";
+    }
+}
+
 public static class HelpRenderer
 {
     public static void Render()
@@ -791,6 +874,7 @@ public static class HelpRenderer
         Console.WriteLine("  dotnet run -- --json");
         Console.WriteLine("  dotnet run -- --brand epson --ticket");
         Console.WriteLine("  dotnet run -- --list-brands");
+        Console.WriteLine("  dotnet run -- --coworker sarah");
         Console.WriteLine();
         Console.WriteLine("Options:");
         Console.WriteLine("  --rage <1-10>  Sets printer hostility level. Default: 5");
@@ -800,6 +884,7 @@ public static class HelpRenderer
         Console.WriteLine("  --json         Outputs diagnostic as JSON");
         Console.WriteLine("  --brand <name> Chooses printer brand: epson, star, zebra, generic");
         Console.WriteLine("  --list-brands  Shows available printer brands");
+        Console.WriteLine("  --coworker [name] Runs the cursed works-on-their-machine test");
         Console.WriteLine("  --help, -h     Shows help");
         Console.WriteLine();
     }
