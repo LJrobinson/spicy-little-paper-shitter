@@ -16,6 +16,13 @@ if (options.ListBrands)
 
 var diagnostic = PrinterChaosEngine.Generate(options.RageLevel, options.Brand);
 
+if (options.Zammad)
+{
+    ZammadRenderer.Render(diagnostic);
+    AchievementRenderer.TryRender(diagnostic);
+    return;
+}
+
 if (options.Json)
 {
     JsonRenderer.Render(diagnostic);
@@ -64,6 +71,7 @@ public sealed class CliOptions
     public bool ListBrands { get; private set; }
     public string? Brand { get; private set; }
     public string? CoworkerName { get; private set; }
+    public bool Zammad { get; private set; }
 
     public static CliOptions Parse(string[] args)
     {
@@ -114,6 +122,10 @@ public sealed class CliOptions
 
                 case "--fix":
                     options.Fix = true;
+                    break;
+
+                case "--zammad":
+                    options.Zammad = true;
                     break;
 
                 case "--help":
@@ -858,6 +870,85 @@ public static class CoworkerRenderer
     }
 }
 
+public static class ZammadRenderer
+{
+    private static readonly Random Random = new();
+
+    private static readonly string[] Customers =
+    [
+        "Front Register",
+        "Back Office",
+        "Inventory Station",
+        "Manager Terminal",
+        "Reception Desk",
+        "The One Computer Everyone Hates"
+    ];
+
+    private static readonly string[] Priorities =
+    [
+        "Normal",
+        "High",
+        "Somehow Critical",
+        "Manager Is Watching",
+        "Customer Line Forming",
+        "Spiritually Urgent"
+    ];
+
+    private static readonly string[] Tags =
+    [
+        "printer",
+        "pos",
+        "thermal-chaos",
+        "driver-goblin",
+        "retail-tech",
+        "works-yesterday"
+    ];
+
+    public static void Render(PrinterDiagnostic diagnostic)
+    {
+        Console.WriteLine();
+        Console.WriteLine("Zammad Ticket Export");
+        Console.WriteLine("====================");
+        Console.WriteLine();
+
+        Console.WriteLine($"Ticket ID : {diagnostic.TicketId}");
+        Console.WriteLine($"Customer  : {Pick(Customers)}");
+        Console.WriteLine($"Group     : POS Support");
+        Console.WriteLine($"Priority  : {Pick(Priorities)}");
+        Console.WriteLine($"State     : open");
+        Console.WriteLine($"Tags      : {string.Join(", ", Tags.OrderBy(_ => Random.Next()).Take(3))}");
+        Console.WriteLine();
+
+        Console.WriteLine("Title");
+        Console.WriteLine("-----");
+        Console.WriteLine($"Receipt printer issue - {diagnostic.Mood}");
+        Console.WriteLine();
+
+        Console.WriteLine("Article");
+        Console.WriteLine("-------");
+        Console.WriteLine("Customer reports the receipt printer was working yesterday.");
+        Console.WriteLine();
+        Console.WriteLine($"Printer: {diagnostic.PrinterName}");
+        Console.WriteLine($"Paper: {diagnostic.PaperStatus}");
+        Console.WriteLine($"Connection: {diagnostic.ConnectionStatus}");
+        Console.WriteLine($"Driver: {diagnostic.DriverStatus}");
+        Console.WriteLine();
+        Console.WriteLine($"Observed behavior: {diagnostic.Diagnosis}");
+        Console.WriteLine($"Recommended action: {diagnostic.RecommendedFix}");
+        Console.WriteLine();
+
+        Console.WriteLine("Internal Note");
+        Console.WriteLine("-------------");
+        Console.WriteLine("Printer appears operational but emotionally noncompliant. Recommend ritual reboot before escalating.");
+        Console.WriteLine();
+    }
+
+    private static string Pick(IReadOnlyList<string> values)
+    {
+        return values[Random.Next(values.Count)];
+    }
+}
+
 public static class HelpRenderer
 {
     public static void Render()
@@ -875,6 +966,7 @@ public static class HelpRenderer
         Console.WriteLine("  dotnet run -- --brand epson --ticket");
         Console.WriteLine("  dotnet run -- --list-brands");
         Console.WriteLine("  dotnet run -- --coworker sarah");
+        Console.WriteLine("  dotnet run -- --zammad");
         Console.WriteLine();
         Console.WriteLine("Options:");
         Console.WriteLine("  --rage <1-10>  Sets printer hostility level. Default: 5");
@@ -885,6 +977,7 @@ public static class HelpRenderer
         Console.WriteLine("  --brand <name> Chooses printer brand: epson, star, zebra, generic");
         Console.WriteLine("  --list-brands  Shows available printer brands");
         Console.WriteLine("  --coworker [name] Runs the cursed works-on-their-machine test");
+        Console.WriteLine("  --zammad       Outputs a fake Zammad-style support ticket");
         Console.WriteLine("  --help, -h     Shows help");
         Console.WriteLine();
     }
