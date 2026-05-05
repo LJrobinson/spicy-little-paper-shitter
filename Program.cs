@@ -14,6 +14,12 @@ if (options.Version)
     return;
 }
 
+if (options.About)
+{
+    AboutRenderer.Render();
+    return;
+}
+
 if (options.ListBrands)
 {
     BrandRenderer.Render();
@@ -79,6 +85,7 @@ public sealed class CliOptions
     public string? CoworkerName { get; private set; }
     public bool Zammad { get; private set; }
     public bool Version { get; private set; }
+    public bool About { get; private set; }
 
     public static CliOptions Parse(string[] args)
     {
@@ -121,6 +128,10 @@ public sealed class CliOptions
 
                 case "--ticket":
                     options.Ticket = true;
+                    break;
+
+                case "--about":
+                    options.About = true;
                     break;
 
                 case "--receipt":
@@ -961,6 +972,29 @@ public static class ZammadRenderer
     }
 }
 
+public static class AboutRenderer
+{
+    public static void Render()
+    {
+        Console.WriteLine();
+        Console.WriteLine("About Spicy Little Paper Shitter");
+        Console.WriteLine("================================");
+        Console.WriteLine();
+        Console.WriteLine("A tiny C# CLI simulator for receipt printers that are");
+        Console.WriteLine("technically functional, emotionally unavailable, and");
+        Console.WriteLine("legally considered peripherals.");
+        Console.WriteLine();
+        Console.WriteLine("Built for POS support survivors, retail tech goblins,");
+        Console.WriteLine("and anyone who has ever heard:");
+        Console.WriteLine();
+        Console.WriteLine("\"It was working yesterday.\"");
+        Console.WriteLine();
+        Console.WriteLine("No real printers were harmed.");
+        Console.WriteLine("They did not deserve that courtesy.");
+        Console.WriteLine();
+    }
+}
+
 public static class HelpRenderer
 {
     public static void Render()
@@ -980,6 +1014,7 @@ public static class HelpRenderer
         Console.WriteLine("  dotnet run -- --coworker sarah");
         Console.WriteLine("  dotnet run -- --zammad");
         Console.WriteLine("  dotnet run -- --version");
+        Console.WriteLine("  dotnet run -- --about");
         Console.WriteLine();
         Console.WriteLine("Options:");
         Console.WriteLine("  --rage <1-10>  Sets printer hostility level. Default: 5");
@@ -992,6 +1027,7 @@ public static class HelpRenderer
         Console.WriteLine("  --coworker [name] Runs the cursed works-on-their-machine test");
         Console.WriteLine("  --zammad       Outputs a fake Zammad-style support ticket");
         Console.WriteLine("  --version, -v  Shows version");
+        Console.WriteLine("  --about        Shows project lore");
         Console.WriteLine("  --help, -h     Shows help");
         Console.WriteLine();
     }
